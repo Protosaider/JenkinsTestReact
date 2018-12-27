@@ -46,6 +46,7 @@ pipeline {
 	    stage('Build Docker test') {
 			steps {
 				sh 'journalctl -u docker'
+				sh 'ls -al /var/run/'
 				sh 'docker build -t react-test -f Dockerfile.test --no-cache .'
 			}
 	    }
@@ -54,6 +55,7 @@ pipeline {
 	    	steps {
 				sh 'docker run --rm react-test'
 				// sh 'docker run --rm react-test -v /var/run/docker.sock:/var/run/docker.sock'
+				// RUN usermod -a -G staff jenkins
 			}
 	    }
 
