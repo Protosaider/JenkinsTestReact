@@ -88,7 +88,6 @@ pipeline {
     post {
         always {
             echo 'Post message: always'
-            sendNotification(currentBuild.result, "$LIST_NOTIFICATION_JENKINS")
         }
         failure {
             echo 'On Failure post-condition'
