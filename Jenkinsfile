@@ -1,7 +1,7 @@
 pipeline {
 
 	// agent none
-	agent { 'testslave' }
+	agent { label 'testslave' }
 
     environment {
         PATH_TO_PROJECT_ROOT = 'app/'
