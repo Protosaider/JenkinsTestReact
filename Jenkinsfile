@@ -85,20 +85,17 @@ pipeline {
 
     }
 
-    // post {
-    //     always {
-    //         echo 'Post message: always'
-    //     }
-    //     failure {
-    //         echo 'On Failure post-condition'
-    //     }
-    //     success {
-    //         echo 'On Success post-condition'
-    //     }
-    //     cleanup {
-    //         deleteDir()
-    //     }
-    // }
+    post {
+        always {
+            echo 'Post message: always'
+        }
+        failure {
+            echo 'On Failure post-condition'
+        }
+        success {
+            echo 'On Success post-condition'
+        }
+    }
 
 
 }
