@@ -31,7 +31,7 @@ pipeline {
     		steps {
 	      		checkout scm
 	      		echo "Hello!"
-	      		sh 'sleep 1'
+	      		// sh 'sleep 1'
       		}
     	}  	
 
