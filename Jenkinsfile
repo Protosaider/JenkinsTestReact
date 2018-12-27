@@ -45,7 +45,7 @@ pipeline {
 
 	    stage('Build Docker test') {
 			steps {
-				sh 'sudo docker build -t react-test -f Dockerfile.test --no-cache .'
+				sh 'docker build -t react-test -f Dockerfile.test --no-cache .'
 			}
 	    }
 
