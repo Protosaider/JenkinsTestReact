@@ -21,78 +21,74 @@ pipeline {
     }
 
     stages {
+
     	// agent { 
     	// 	label 'gcloud-slave'
     	// 	// node { label 'gcloud-slave' }
     	// }
 
-    	try {
+    	stage('Checkout') {
+    		steps {
+	      		checkout scm
+	      		echo "Hello!"
+	      		sh 'sleep 1'
+      		}
+    	}  	
 
-	    	stage('Checkout') {
-	    		steps {
-		      		checkout scm
-		      		echo "Hello!"
-		      		sh 'sleep 1'
-	      		}
-	    	}  	
+    	stage('Environment') {
+    		steps {
+				sh 'git --version'
+				echo "Branch: ${env.BRANCH_NAME}"
+				sh 'docker -v'
+				sh 'printenv'
+			}
+	    }
 
-	    	stage('Environment') {
-	    		steps {
-					sh 'git --version'
-					echo "Branch: ${env.BRANCH_NAME}"
-					sh 'docker -v'
-					sh 'printenv'
-				}
-		    }
+	    stage('Build Docker test') {
+			steps {
+				sh 'journalctl -u docker'
+				sh 'ls -al /var/run/'
+				sh 'docker build -t react-test -f Dockerfile.test --no-cache .'
+			}
+	    }
 
-		    stage('Build Docker test') {
-				steps {
-					sh 'journalctl -u docker'
-					sh 'ls -al /var/run/'
-					sh 'docker build -t react-test -f Dockerfile.test --no-cache .'
-				}
-		    }
+	    stage('Docker test') {
+	    	steps {
+				sh 'docker run --rm react-test'
+				// sh 'docker run --rm react-test -v /var/run/docker.sock:/var/run/docker.sock'
+				// RUN usermod -a -G staff jenkins
+			}
+	    }
 
-		    stage('Docker test') {
-		    	steps {
-					sh 'docker run --rm react-test'
-					// sh 'docker run --rm react-test -v /var/run/docker.sock:/var/run/docker.sock'
-					// RUN usermod -a -G staff jenkins
-				}
-		    }
+	    stage('Clean Docker test') {
+	    	steps {
+				sh 'docker rmi react-test'
+			}
+	    }
 
-		    stage('Clean Docker test') {
-		    	steps {
-					sh 'docker rmi react-test'
-				}
-		    }
-
-		    stage('Deploy') {
-		    	steps {
-		    		script {
-	    				if(env.BRANCH_NAME == 'master') {
-							sh 'docker build -t react-app --no-cache .'
-							sh 'docker tag react-app localhost:5000/react-app'
-							sh 'docker push localhost:5000/react-app'
-							sh 'docker rmi -f react-app localhost:5000/react-app'
-		    			}			
-						// withDockerRegistry([credentialsId: "", url: ""])
-						// docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-				            // app.push("${env.BUILD_NUMBER}")
-				            // app.push("latest")
-			      	}
-				}
-		    }
-
-		} catch (err) {
-			throw err
-		}
+	    stage('Deploy') {
+	    	steps {
+	    		script {
+    				if(env.BRANCH_NAME == 'master') {
+						sh 'docker build -t react-app --no-cache .'
+						sh 'docker tag react-app localhost:5000/react-app'
+						sh 'docker push localhost:5000/react-app'
+						sh 'docker rmi -f react-app localhost:5000/react-app'
+	    			}			
+					// withDockerRegistry([credentialsId: "", url: ""])
+					// docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+			            // app.push("${env.BUILD_NUMBER}")
+			            // app.push("latest")
+		      	}
+			}
+	    }
 
     }
 
     post {
         always {
-            echo 'Post message'
+            echo 'Post message: always'
+            sendNotification(currentBuild.result, "$LIST_NOTIFICATION_JENKINS")
         }
         failure {
             echo 'On Failure post-condition'
