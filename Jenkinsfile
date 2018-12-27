@@ -38,7 +38,7 @@ pipeline {
     		steps {
 				sh 'git --version'
 				echo "Branch: ${env.BRANCH_NAME}"
-				sh 'docker -v /var/run/docker.sock:/var/run/docker.sock'
+				sh 'docker -v'
 				sh 'printenv'
 			}
 	    }
@@ -46,7 +46,7 @@ pipeline {
 	    stage('Build Docker test') {
 			steps {
 				sh 'journalctl -u docker'
-				sh 'docker build -t react-test -f Dockerfile.test --no-cache .'
+				sh 'docker build -t react-test -f Dockerfile.test --no-cache -v /var/run/docker.sock:/var/run/docker.sock.'
 			}
 	    }
 
