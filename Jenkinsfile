@@ -38,7 +38,7 @@ pipeline {
     		steps {
 				sh 'git --version'
 				echo "Branch: ${env.BRANCH_NAME}"
-				sh 'docker -v'
+				sh 'docker -v /var/run/docker.sock:/var/run/docker.sock'
 				sh 'printenv'
 			}
 	    }
