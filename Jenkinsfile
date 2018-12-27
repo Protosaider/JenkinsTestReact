@@ -5,12 +5,12 @@ pipeline {
 	// agent { label 'gcloud-slave' }
 	agent { docker true }
 
-    environment {
-        // PATH_TO_PROJECT_ROOT = 'app/'
-        // PATH_TO_MSBUILD = 'C:/"Program Files (x86)"/"Microsoft Visual Studio"/2017/Community/MSBuild/15.0/Bin/'
-        // PATH_TO_NUGET = 'C:/"Program Files (x86)"/NuGet/'
-        // PROJECT_NAME = 'ConsoleAppHelloWorld'
-    }
+    // environment {
+    //     PATH_TO_PROJECT_ROOT = 'app/'
+    //     // PATH_TO_MSBUILD = 'C:/"Program Files (x86)"/"Microsoft Visual Studio"/2017/Community/MSBuild/15.0/Bin/'
+    //     // PATH_TO_NUGET = 'C:/"Program Files (x86)"/NuGet/'
+    //     // PROJECT_NAME = 'ConsoleAppHelloWorld'
+    // }
 
     options {
             //Skip checking out code from source control by default in the agent directive.
