@@ -1,7 +1,8 @@
 pipeline {
 
 	// agent none
-	agent { label 'testslave' }
+	// agent { label 'testslave' }
+	agent { label 'gcloud-slave' }
 
     environment {
         PATH_TO_PROJECT_ROOT = 'app/'
