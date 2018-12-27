@@ -46,24 +46,24 @@ pipeline {
 	    stage('Build Docker test') {
 			steps {
 				sh 'journalctl -u docker'
-				sh 'docker build -t react-test -f Dockerfile.test --no-cache.'
+				sh 'docker build -t react-test -f Dockerfile.test --no-cache .'
 			}
 	    }
 
 	    stage('Docker test') {
 	    	steps {
-				sh 'docker run --rm react-test -m '
-				// sh 'docker run --rm react-test -m -v /var/run/docker.sock:/var/run/docker.sock'
+				sh 'docker run --rm react-test'
+				// sh 'docker run --rm react-test -v /var/run/docker.sock:/var/run/docker.sock'
 			}
 	    }
 
-	    stage('Clean Docker test'){
+	    stage('Clean Docker test') {
 	    	steps {
 				sh 'docker rmi react-test'
 			}
 	    }
 
-	    stage('Deploy'){
+	    stage('Deploy') {
 	    	steps {
 	    		script {
     				if(env.BRANCH_NAME == 'master') {
