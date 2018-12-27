@@ -26,9 +26,11 @@ pipeline {
     	// }
 
     	stage('Checkout') {
-      		checkout scm
-      		echo "Hello!"
-      		sh sleep 1
+    		steps {
+	      		checkout scm
+	      		echo "Hello!"
+	      		sh sleep 1
+      		}
     	}
 
    //  	stage('Environment') {
