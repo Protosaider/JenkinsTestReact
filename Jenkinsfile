@@ -45,6 +45,7 @@ pipeline {
 
 	    stage('Build Docker test') {
 			steps {
+				sh 'journalctl -u docker'
 				sh 'docker build -t react-test -f Dockerfile.test --no-cache .'
 			}
 	    }
