@@ -9,7 +9,6 @@
     "start": "NODE_ENV=production npm-run-all start:*",
     "start:build": "webpack -p",
     "start:server": "nodemon server/index.js",
-    // "test:security": "nsp check",
     "test:security": "npm audit --audit-level high",
     "test:lint": "eslint .",
     "test:server": "NODE_ENV=test mocha tests/server/**/*.js",
