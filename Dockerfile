@@ -34,3 +34,4 @@ RUN npm run build
 
 # Main command
 CMD [ "npm", "run", "start" ]
+# CMD npm run start
