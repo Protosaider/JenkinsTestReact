@@ -64,47 +64,49 @@
 // }
 
 node('ephemeral-slave') {
-    environment {
-        CI = 'true' 
-    }
-	try {
-		stage('Checkout') {
-			checkout scm
-		}
-
-		stage('Environment') {
-			sh 'git --version'
-			echo "Branch: ${env.BRANCH_NAME}"
-			sh 'docker -v'
-			sh 'printenv'
-		}
-
-		stage('Build Docker test') {
-			sh 'docker build --tag react-test --file Dockerfile.test --no-cache .'
-		}
-
-		stage('Docker test') {
-			sh 'docker run --rm react-test'
-		}
-
-		stage('Clean Docker test') {
-			sh 'docker rmi react-test'
-		}
-
-		stage('Deploy') {
-			if(env.BRANCH_NAME == 'master') {
-				sh 'docker build -t react-app --no-cache .'
-
-				sh 'docker tag react-app localhost:5000/react-app'
-				sh 'docker push localhost:5000/react-app'
-				sh 'docker rmi -f react-app localhost:5000/react-app'
-
-				// sh 'docker tag react-app http://192.168.99.100:5000/react-app'
-				// sh 'docker push http://192.168.99.100:5000/react-app'
-				// sh 'docker rmi -f react-app http://192.168.99.100:5000/react-app'
+    // environment {
+    //     CI = 'true' 
+    // }
+    withEnv(['CI=true']) { //CI - or use RUN CI=true npm test
+    	try {
+			stage('Checkout') {
+				checkout scm
 			}
+
+			stage('Environment') {
+				sh 'git --version'
+				echo "Branch: ${env.BRANCH_NAME}"
+				sh 'docker -v'
+				sh 'printenv'
+			}
+
+			stage('Build Docker test') {
+				sh 'docker build --tag react-test --file Dockerfile.test --no-cache .'
+			}
+
+			stage('Docker test') {
+				sh 'docker run --rm react-test'
+			}
+
+			stage('Clean Docker test') {
+				sh 'docker rmi react-test'
+			}
+
+			stage('Deploy') {
+				if(env.BRANCH_NAME == 'master') {
+					sh 'docker build -t react-app --no-cache .'
+
+					sh 'docker tag react-app localhost:5000/react-app'
+					sh 'docker push localhost:5000/react-app'
+					sh 'docker rmi -f react-app localhost:5000/react-app'
+
+					// sh 'docker tag react-app http://192.168.99.100:5000/react-app'
+					// sh 'docker push http://192.168.99.100:5000/react-app'
+					// sh 'docker rmi -f react-app http://192.168.99.100:5000/react-app'
+				}
+			}
+	  	} catch (err) {
+	  		throw err
 		}
-  	} catch (err) {
-  		throw err
-	}
+    }
 }
