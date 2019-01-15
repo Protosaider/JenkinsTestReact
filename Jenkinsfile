@@ -64,6 +64,9 @@
 // }
 
 node('ephemeral-slave') {
+    environment {
+        CI = 'true' 
+    }
 	try {
 		stage('Checkout') {
 			checkout scm
