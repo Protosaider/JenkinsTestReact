@@ -343,7 +343,7 @@ pipeline {
 					// 	])
 					// }
 					// println json.toPrettyString()
-					def json = """{
+					def json = '''{
 						"attachments": [ 
 							{
 								"fallback": \${subject},
@@ -370,7 +370,7 @@ pipeline {
 								"ts": \${epoch}
 							}					 
 						]
-					}"""
+					}'''
 					echo "${json}"
 					// slackSend(color: color, message: msg, channel: channel, attachments: attachments.toString())
 					// slackSend(color: color, message: msg, channel: channel, attachments: json.toPrettyString())
