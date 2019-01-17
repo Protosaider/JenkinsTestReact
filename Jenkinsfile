@@ -123,106 +123,106 @@
 		// 
 
 
-def getGitUrl() {
-    def url = sh(returnStdout: true, script: "git remote get-url origin").trim()
-    return url
-}
+// def getGitUrl() {
+//     def url = sh(returnStdout: true, script: "git remote get-url origin").trim()
+//     return url
+// }
 
-def getGitAuthor() {
-    def commit = sh(returnStdout: true, script: 'git rev-parse HEAD')
-    def author = sh(returnStdout: true, script: "git --no-pager show -s --format='%an' ${commit}").trim()
-    return author
-}
+// def getGitAuthor() {
+//     def commit = sh(returnStdout: true, script: 'git rev-parse HEAD')
+//     def author = sh(returnStdout: true, script: "git --no-pager show -s --format='%an' ${commit}").trim()
+//     return author
+// }
 
-def getLastCommitMessage() {
-    def message = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim()
-    return message
-}
+// def getLastCommitMessage() {
+//     def message = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim()
+//     return message
+// }
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-def notifySlack(String buildStatus = 'STARTED', String channel = '#build') {
+// def notifySlack(String buildStatus = 'STARTED', String channel = '#build') {
 
-  long epoch = System.currentTimeMillis()/1000
+//   long epoch = System.currentTimeMillis()/1000
 
-  // Build status of null means success.
-  buildStatus = buildStatus ?: 'SUCCESS'
+//   // Build status of null means success.
+//   buildStatus = buildStatus ?: 'SUCCESS'
 
-  def color
+//   def color
 
-  if (buildStatus == 'STARTED') {
-      color = '#D4DADF'
-      // color = 'good'
-  } else if (buildStatus == 'SUCCESS') {
-      color = '#BDFFC3'
-      // color = 'good'
-  } else if (buildStatus == 'UNSTABLE') {
-      color = '#FFFE89'
-      // color = 'warning'
-  } else if (status == 'ABORTED') {
-      color = '#FFFE89'
-      // color = 'warning'
-  } else if (status == 'NOT_BUILT') {
-      color = '#FFFE89'
-      // color = 'warning'
-  }
-  else if (buildResult == 'FAILURE') {
-      color = '#FFFE89'
-      // color = 'danger'
-  } 
-  else {
-      color = '#FF9FA1'
-  }
+//   if (buildStatus == 'STARTED') {
+//       color = '#D4DADF'
+//       // color = 'good'
+//   } else if (buildStatus == 'SUCCESS') {
+//       color = '#BDFFC3'
+//       // color = 'good'
+//   } else if (buildStatus == 'UNSTABLE') {
+//       color = '#FFFE89'
+//       // color = 'warning'
+//   } else if (status == 'ABORTED') {
+//       color = '#FFFE89'
+//       // color = 'warning'
+//   } else if (status == 'NOT_BUILT') {
+//       color = '#FFFE89'
+//       // color = 'warning'
+//   }
+//   else if (buildResult == 'FAILURE') {
+//       color = '#FFFE89'
+//       // color = 'danger'
+//   } 
+//   else {
+//       color = '#FF9FA1'
+//   }
 
-  // get Jenkins user that has started the build
-  wrap([$class: 'BuildUser']) { script { env.USER_ID = "${BUILD_USER_ID}" } }
+//   // get Jenkins user that has started the build
+//   wrap([$class: 'BuildUser']) { script { env.USER_ID = "${BUILD_USER_ID}" } }
 
-  def subject = "${buildStatus}: Job ${env.JOB_NAME} build #${env.BUILD_NUMBER} by ${env.USER_ID}"
+//   def subject = "${buildStatus}: Job ${env.JOB_NAME} build #${env.BUILD_NUMBER} by ${env.USER_ID}"
 
-  def msg = "${subject}\n More info at: ${env.BUILD_URL}"
+//   def msg = "${subject}\n More info at: ${env.BUILD_URL}"
 
-  JSONArray attachments = new JSONArray();
-  JSONObject attachment = new JSONObject();
+//   JSONArray attachments = new JSONArray();
+//   JSONObject attachment = new JSONObject();
 
-  attachment.put('fallback', '${subject}');
-  attachment.put('pretext', 'Git info');
-  attachment.put('color', '$(color)');
-  def url = getGitUrl();
-  attachment.put('footer', '$(url)');
+//   attachment.put('fallback', '${subject}');
+//   attachment.put('pretext', 'Git info');
+//   attachment.put('color', '$(color)');
+//   def url = getGitUrl();
+//   attachment.put('footer', '$(url)');
 
-  JSONObject fieldBranch = new JSONObject();
-  fieldBranch.put('title', 'Branch');
-  fieldBranch.put('value', '${env.BRANCH_NAME}');
-  fieldBranch.put('short', 'true');
+//   JSONObject fieldBranch = new JSONObject();
+//   fieldBranch.put('title', 'Branch');
+//   fieldBranch.put('value', '${env.BRANCH_NAME}');
+//   fieldBranch.put('short', 'true');
 
-  JSONObject fieldGitAuthor = new JSONObject();
-  fieldGitAuthor.put('title', 'Author');
-  def author = getGitAuthor();
-  fieldGitAuthor.put('value', '${author}');
-  fieldGitAuthor.put('short', 'true');
+//   JSONObject fieldGitAuthor = new JSONObject();
+//   fieldGitAuthor.put('title', 'Author');
+//   def author = getGitAuthor();
+//   fieldGitAuthor.put('value', '${author}');
+//   fieldGitAuthor.put('short', 'true');
 
-  JSONObject fieldLastCommitMessage = new JSONObject();
-  fieldLastCommitMessage.put('title', 'Last commit');
-  def lastCommitMessage = getLastCommitMessage();
-  fieldLastCommitMessage.put('value', '${lastCommitMessage}');
-  fieldLastCommitMessage.put('short', 'true');
+//   JSONObject fieldLastCommitMessage = new JSONObject();
+//   fieldLastCommitMessage.put('title', 'Last commit');
+//   def lastCommitMessage = getLastCommitMessage();
+//   fieldLastCommitMessage.put('value', '${lastCommitMessage}');
+//   fieldLastCommitMessage.put('short', 'true');
 
-  JSONArray fields = new JSONObject();
-  fields.add(fieldBranch);
-  fields.add(fieldGitAuthor);
-  fields.add(fieldLastCommitMessage);
+//   JSONArray fields = new JSONObject();
+//   fields.add(fieldBranch);
+//   fields.add(fieldGitAuthor);
+//   fields.add(fieldLastCommitMessage);
 
-  attachment.put('fields', fields);
+//   attachment.put('fields', fields);
 
-  attachments.add(attachment);
+//   attachments.add(attachment);
 
-  slackSend(color: color, message: msg, channel: channel, attachments: attachments.toString())
-}
+//   slackSend(color: color, message: msg, channel: channel, attachments: attachments.toString())
+// }
 
 
 // @Library('github.com/Protosaider/jenkins-shared-library@master') _ 
-@Library('jenkins-shared-library') _ 
+// @Library('jenkins-shared-library') _ 
 
 pipeline {
 	agent {
@@ -263,8 +263,51 @@ pipeline {
 
 		stage('Checkout Git repository') {
 			steps {
+				wrap([$class: 'BuildUser']) { script { env.USER_ID = "${BUILD_USER_ID}" } }
 				script {
-					notifySlack
+					def url = sh(returnStdout: true, script: "git remote get-url origin").trim()
+					def commit = sh(returnStdout: true, script: 'git rev-parse HEAD')
+    				def author = sh(returnStdout: true, script: "git --no-pager show -s --format='%an' ${commit}").trim()
+   	 				def lastCommitMessage = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim()
+  					long epoch = System.currentTimeMillis()/1000
+  					String buildStatus = 'STARTED'
+  					def color = '#D4DADF'
+  					def subject = "${buildStatus}: Job ${env.JOB_NAME} build #${env.BUILD_NUMBER} by ${env.USER_ID}"
+  					def msg = "${subject}\n More info at: ${env.BUILD_URL}"
+
+					JSONArray attachments = new JSONArray();
+					JSONObject attachment = new JSONObject();
+
+					attachment.put('fallback', '${subject}');
+					attachment.put('pretext', 'Git info');
+					attachment.put('color', '$(color)');
+					attachment.put('footer', '$(url)');
+
+					JSONObject fieldBranch = new JSONObject();
+					fieldBranch.put('title', 'Branch');
+					fieldBranch.put('value', '${env.BRANCH_NAME}');
+					fieldBranch.put('short', 'true');
+
+					JSONObject fieldGitAuthor = new JSONObject();
+					fieldGitAuthor.put('title', 'Author');
+					fieldGitAuthor.put('value', '${author}');
+					fieldGitAuthor.put('short', 'true');
+
+					JSONObject fieldLastCommitMessage = new JSONObject();
+					fieldLastCommitMessage.put('title', 'Last commit');
+					fieldLastCommitMessage.put('value', '${lastCommitMessage}');
+					fieldLastCommitMessage.put('short', 'true');
+
+					JSONArray fields = new JSONObject();
+					fields.add(fieldBranch);
+					fields.add(fieldGitAuthor);
+					fields.add(fieldLastCommitMessage);
+
+					attachment.put('fields', fields);
+
+					attachments.add(attachment);
+
+					slackSend(color: color, message: msg, channel: channel, attachments: attachments.toString())
 				}
 				checkout scm
 			}
