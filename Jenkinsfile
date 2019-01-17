@@ -222,7 +222,7 @@ def notifySlack(String buildStatus = 'STARTED', String channel = '#build') {
 
 
 // @Library('github.com/Protosaider/jenkins-shared-library@master') _ 
-// @Library('jenkins-shared-library') _ 
+@Library('jenkins-shared-library') _ 
 
 pipeline {
 	agent {
