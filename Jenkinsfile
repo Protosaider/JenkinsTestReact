@@ -343,9 +343,34 @@ pipeline {
 					// 	])
 					// }
 					// println json.toPrettyString()
-					
-					def json = """[ { \"fallback\": \"subject\" } ]"""
-
+					def json = """{
+						attachments ([ 
+							{
+								fallback '${subject}'
+								color '${color}'
+								pretext 'Git info'
+								fields([
+									{
+										title 'Branch'
+										value '${env.BRANCH_NAME}'
+										'short' true
+									}
+									{
+										title 'Author'
+										value '${author}'
+										'short' true
+									}
+									{
+										title 'Last commit'
+										value '${lastCommitMessage}'
+										'short' true
+									}
+								])
+								footer '${url}'
+								ts '${epoch}'
+							}					 
+						])
+					}"""
 					// slackSend(color: color, message: msg, channel: channel, attachments: attachments.toString())
 					// slackSend(color: color, message: msg, channel: channel, attachments: json.toPrettyString())
 					slackSend(color: color, message: msg, channel: channel, attachments: json)
