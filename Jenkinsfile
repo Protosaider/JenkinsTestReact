@@ -357,11 +357,6 @@ pipeline {
 										"short": true
 									},
 									{
-										"title": "Author",
-										"value": \"""" + author + """\",
-										"short": true
-									},
-									{
 										"title": "Last commit",
 										"value": \"""" + lastCommitMessage + """\",
 										"short": true
