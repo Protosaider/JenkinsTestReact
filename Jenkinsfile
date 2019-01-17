@@ -263,7 +263,7 @@ pipeline {
 
 		stage('Checkout Git repository') {
 			steps {
-				wrap([$class: 'BuildUser']) { script { env.USER_ID = "${BUILD_USER_ID}" } }
+				// wrap([$class: 'BuildUser']) { script { env.USER_ID = "${BUILD_USER_ID}" } }
 				script {
 					def url = sh(returnStdout: true, script: "git remote get-url origin").trim()
 					def commit = sh(returnStdout: true, script: 'git rev-parse HEAD')
@@ -272,7 +272,8 @@ pipeline {
   					long epoch = System.currentTimeMillis()/1000
   					String buildStatus = 'STARTED'
   					def color = '#D4DADF'
-  					def subject = "${buildStatus}: Job ${env.JOB_NAME} build #${env.BUILD_NUMBER} by ${env.USER_ID}"
+  					// def subject = "${buildStatus}: Job ${env.JOB_NAME} build #${env.BUILD_NUMBER} by ${env.USER_ID}"
+  					def subject = "${buildStatus}: Job ${env.JOB_NAME} build #${env.BUILD_NUMBER}"
   					def msg = "${subject}\n More info at: ${env.BUILD_URL}"
 
 					JSONArray attachments = new JSONArray();
