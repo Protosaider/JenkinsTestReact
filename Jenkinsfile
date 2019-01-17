@@ -221,7 +221,6 @@ pipeline {
 
 	post {
 		always {
-			cleanWs()
 			notifySlack(buildStatus: currentBuild.result, channel: "${params.SLACK_CHANNEL_2}")
 		}
 
