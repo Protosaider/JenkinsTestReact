@@ -353,17 +353,17 @@ pipeline {
 									{
 										"title": "Branch",
 										"value": '\${env.BRANCH_NAME}',
-										"short": "true"
+										"short": true
 									},
 									{
 										"title": "Author",
 										"value": '\${author}',
-										"short": "true"
+										"short": true
 									},
 									{
 										"title": "Last commit",
 										"value": '\${lastCommitMessage}',
-										"short": "true"
+										"short": true
 									}
 								],
 								"footer": '\${url}',
