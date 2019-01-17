@@ -264,7 +264,7 @@ pipeline {
 		stage('Checkout Git repository') {
 			steps {
 				script {
-					notifySlack()
+					notifySlack
 				}
 				checkout scm
 			}
