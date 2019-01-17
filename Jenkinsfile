@@ -279,39 +279,31 @@ pipeline {
   					def subject = "${buildStatus}: Job ${env.JOB_NAME} build #${env.BUILD_NUMBER}"
   					def msg = "${subject}\n More info at: ${env.BUILD_URL}"
 
-					// JSONArray attachments = new JSONArray();
-					// JSONObject attachment = new JSONObject();
-
-					// attachment.put('fallback', '${subject}');
-					// attachment.put('pretext', 'Git info');
-					// attachment.put('color', '$(color)');
-
-					// JSONObject fieldBranch = new JSONObject();
-					// fieldBranch.put('title', 'Branch');
-					// fieldBranch.put('value', '${env.BRANCH_NAME}');
-					// fieldBranch.put('short', 'true');
-
-					// JSONObject fieldGitAuthor = new JSONObject();
-					// fieldGitAuthor.put('title', 'Author');
-					// fieldGitAuthor.put('value', '${author}');
-					// fieldGitAuthor.put('short', 'true');
-
-					// JSONObject fieldLastCommitMessage = new JSONObject();
-					// fieldLastCommitMessage.put('title', 'Last commit');
-					// fieldLastCommitMessage.put('value', '${lastCommitMessage}');
-					// fieldLastCommitMessage.put('short', 'true');
-
-					// JSONArray fields = new JSONObject();
-					// fields.add(fieldBranch);
-					// fields.add(fieldGitAuthor);
-					// fields.add(fieldLastCommitMessage);
-
-					// attachment.put('fields', fields);
-
-					// attachment.put('footer', '$(url)');
-					// attachment.put('ts', '$(epoch)');
-
-					// attachments.add(attachment);
+					JSONArray attachments = new JSONArray();
+					JSONObject attachment = new JSONObject();
+					attachment.put('fallback', '${subject}');
+					attachment.put('pretext', 'Git info');
+					attachment.put('color', '$(color)');
+					JSONObject fieldBranch = new JSONObject();
+					fieldBranch.put('title', 'Branch');
+					fieldBranch.put('value', '${env.BRANCH_NAME}');
+					fieldBranch.put('short', 'true');
+					JSONObject fieldGitAuthor = new JSONObject();
+					fieldGitAuthor.put('title', 'Author');
+					fieldGitAuthor.put('value', '${author}');
+					fieldGitAuthor.put('short', 'true');
+					JSONObject fieldLastCommitMessage = new JSONObject();
+					fieldLastCommitMessage.put('title', 'Last commit');
+					fieldLastCommitMessage.put('value', '${lastCommitMessage}');
+					fieldLastCommitMessage.put('short', 'true');
+					JSONArray fields = new JSONObject();
+					fields.add(fieldBranch);
+					fields.add(fieldGitAuthor);
+					fields.add(fieldLastCommitMessage);
+					attachment.put('fields', fields);
+					attachment.put('footer', '$(url)');
+					attachment.put('ts', '$(epoch)');
+					attachments.add(attachment);
 
 					// def json = new groovy.json.JsonBuilder()
 					// json {
@@ -339,39 +331,45 @@ pipeline {
 					// 			])
 					// 			footer '$(url)'
 					// 			ts '${epoch}'
-					// 		}
-					 
+					// 		}					 
 					// 	])
 					// }
 					// println json.toPrettyString()
-					def json = """{
-						"attachments": [ 
-							{
-								"fallback": \"""" + subject + """\",
-								"color": \"""" + color + """\",
-								"pretext": "Git info",
-								"fields": [
-									{
-										"title": "Branch",
-										"value": \"""" + env.BRANCH_NAME + """\",
-										"short": true
-									},
-									{
-										"title": "Last commit",
-										"value": \"""" + lastCommitMessage + """\",
-										"short": true
-									}
-								],
-								"footer": \"""" + url + """\",
-								"ts": """ + epoch + """
-							}					 
-						]
-					}"""
+					
 
-					echo "${json}"
-					// slackSend(color: color, message: msg, channel: channel, attachments: attachments.toString())
-					// slackSend(color: color, message: msg, channel: channel, attachments: json.toPrettyString())
-					slackSend(color: color, message: msg, channel: "${params.SLACK_CHANNEL_2}", attachments: json)
+					// def json = """{
+					// 	"attachments": [ 
+					// 		{
+					// 			"fallback": \"""" + subject + """\",
+					// 			"color": \"""" + color + """\",
+					// 			"pretext": "Git info",
+					// 			"fields": [
+					// 				{
+					// 					"title": "Branch",
+					// 					"value": \"""" + env.BRANCH_NAME + """\",
+					// 					"short": true
+					// 				},
+					// 				{
+					// 					"title": "Author",
+					// 					"value": \"""" + author + """\",
+					// 					"short": true
+					// 				},
+					// 				{
+					// 					"title": "Last commit",
+					// 					"value": \"""" + lastCommitMessage + """\",
+					// 					"short": true
+					// 				}
+					// 			],
+					// 			"footer": \"""" + url + """\",
+					// 			"ts": """ + epoch + """
+					// 		}					 
+					// 	]
+					// }"""
+					// echo "${json}"
+					
+					slackSend(color: color, message: msg, channel: "${params.SLACK_CHANNEL_2}", attachments: attachments.toString())
+					// slackSend(color: color, message: msg, channel: "${params.SLACK_CHANNEL_2}", attachments: json.toPrettyString())
+					// slackSend(color: color, message: msg, channel: "${params.SLACK_CHANNEL_2}", attachments: json)
 				}
 			}
 		}
