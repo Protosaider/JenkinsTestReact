@@ -265,6 +265,7 @@ pipeline {
 			steps {
 				checkout scm
 				// wrap([$class: 'BuildUser']) { script { env.USER_ID = "${BUILD_USER_ID}" } }
+				@NonCPS
 				script {
 					def url = sh(returnStdout: true, script: "git remote get-url origin").trim()
 					def commit = sh(returnStdout: true, script: 'git rev-parse HEAD')
