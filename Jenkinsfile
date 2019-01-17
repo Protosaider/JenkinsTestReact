@@ -439,30 +439,33 @@ pipeline {
 				String buildStatus = currentBuild.result
 				buildStatus = buildStatus ?: 'SUCCESS'
 
+				def iconEmoji = ':jenkins:'
+
 				def color
-				if (buildStatus == 'STARTED') {
-				  color = '#D4DADF'
+				if (buildStatus == 'STARTED' || buildStatus == 'ABORTED') {
+				  color = '#D4DADF' // Grey
 				} else if (buildStatus == 'SUCCESS') {
-				  color = '#BDFFC3'
-				  // color = 'good'
-				} else if (buildStatus == 'UNSTABLE') {
-				  color = '#FFFE89'
-				} else if (status == 'ABORTED') {
-				  color = '#FFFE89'
-				} else if (status == 'NOT_BUILT') {
-				  color = '#FFFE89'
-				  // color = 'warning'
-				}
-				else if (buildResult == 'FAILURE') {
-				  color = '#FFFE89'
-				  // color = 'danger'
+				  // color = '#319b20' // Green
+				  // color = '#BDFFC3'
+				  color = 'good'
+				} else if (buildStatus == 'UNSTABLE' || buildStatus == 'INPUT REQUIRED' || buildStatus == 'NOT_BUILT') {
+				  // color = '#ff8316' // Yellow
+				  // color = '#FFFE89'
+				  color = 'warning'
+				} else if (buildResult == 'FAILURE') {
+				  // color = '#f44242' // Red
+				  // color = '#FFFE89'
+				  // color = '#FF9FA1'
+				  color = 'danger'
+				  iconEmoji = ':badjenkins:'
 				} 
 				else {
 				  color = '#FF9FA1'
+				  iconEmoji = ':badjenkins:'
 				}
 
 
-				def subject = "${buildStatus}: Job ${env.JOB_NAME} build #${env.BUILD_NUMBER}"
+				def subject = "*${buildStatus}*${iconEmoji}\nJob _${env.JOB_NAME}_, build _#${env.BUILD_NUMBER}_"
 				def msg = "${subject}\n More info at: ${env.BUILD_URL}"
 
 
