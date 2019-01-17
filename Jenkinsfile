@@ -63,8 +63,6 @@
 //     }
 // }
 
-		// // #!groovy
-		// // @Library('github.com/Protosaider/jenkins-shared-lib@master') _ 
 
 		// node('ephemeral-slave') {
 		//     // environment {
@@ -124,6 +122,10 @@
 		// }
 		// 
 
+#!groovy
+// @Library('github.com/Protosaider/jenkins-shared-library@master') _ 
+@Library('jenkins-shared-library') _ 
+
 pipeline {
 	agent {
 		node {
@@ -139,16 +141,16 @@ pipeline {
 	// 	timestamps()
 	}
 
-	// parameters {
+	parameters {
 
-	// 	string(name: 'SLACK_CHANNEL_1',
-	// 			description: 'Default Slack channel to send messages to',
-	// 			defaultValue: '#my_channel_1')
+		string(name: 'SLACK_CHANNEL_1',
+				description: 'Default Slack channel to send messages to',
+				defaultValue: '#build')
 
-	// 	string(name: 'SLACK_CHANNEL_2',
-	// 			description: 'Default Slack channel to send messages to',
-	// 			defaultValue: '#my_channel_2')           
-	// }
+		string(name: 'SLACK_CHANNEL_2',
+				description: 'Default Slack channel to send messages to',
+				defaultValue: '#my_channel_2')           
+	}
 
 	environment {
 		// // Slack configuration
@@ -163,6 +165,7 @@ pipeline {
 
 		stage('Checkout Git repository') {
 			steps {
+				notifySlack()
 				checkout scm
 			}
 		}
@@ -172,9 +175,8 @@ pipeline {
 				sh 'git --version'
 				echo "Branch: ${env.BRANCH_NAME}"
 				sh 'docker -v'
-				sh 'printenv'
+				sh 'printenv|sort'
 				sh 'env|sort'
-				// echo sh(returnStdout: true, script: 'env|sort')
 			}
 		}
 
@@ -209,11 +211,44 @@ pipeline {
 		// 		sh 'docker rmi -f react-app localhost:5000/react-app'
 		// 	}
 		// }
+		
+		// stage("Clean Workspace") {
+		// 	steps {
+		// 		echo "Cleaning-up job workspace"
+		// 		deleteDir()
+		// 	}
+		// }
 	}
 
-	// post {
-	// 	always {
-	// 		cleanWs()
-	// 	}
-	// }
+	post {
+		always {
+			cleanWs()
+			notifySlack(buildStatus: currentBuild.result, channel: "${params.SLACK_CHANNEL_2}")
+		}
+
+		// aborted {
+		// 	echo "Sending message to Slack"
+		// 	// slackSend (color: "${env.SLACK_COLOR_WARNING}",
+		// 	// 		channel: "${params.SLACK_CHANNEL_2}",
+		// 	// 		message: "*ABORTED:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${env.USER_ID}\n More info at: ${env.BUILD_URL}")
+		// }
+
+		// failure {
+		// 	echo "Sending message to Slack"
+		// 	// slackSend (color: "${env.SLACK_COLOR_DANGER}",
+		// 	// 		channel: "${params.SLACK_CHANNEL_2}",
+		// 	// 		message: "*FAILED:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${env.USER_ID}\n More info at: ${env.BUILD_URL}")
+		// }
+
+		// success {
+		// 	echo "Sending message to Slack"
+		// 	// slackSend (color: "${env.SLACK_COLOR_GOOD}",
+		// 	// 		channel: "${params.SLACK_CHANNEL_1}",
+		// 	// 		message: "*SUCCESS:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${env.USER_ID}\n More info at: ${env.BUILD_URL}")
+		// }
+
+		// unstable {
+
+		// }
+	}
 }
