@@ -371,6 +371,7 @@ pipeline {
 							}					 
 						]
 					}"""
+					echo "${json}"
 					// slackSend(color: color, message: msg, channel: channel, attachments: attachments.toString())
 					// slackSend(color: color, message: msg, channel: channel, attachments: json.toPrettyString())
 					slackSend(color: color, message: msg, channel: "${params.SLACK_CHANNEL_2}", attachments: json)
@@ -378,33 +379,33 @@ pipeline {
 			}
 		}
 
-		stage('Environment') {
-			steps {
-				sh 'git --version'
-				echo "Branch: ${env.BRANCH_NAME}"
-				sh 'docker -v'
-				sh 'printenv|sort'
-				sh 'env|sort'
-			}
-		}
+		// stage('Environment') {
+		// 	steps {
+		// 		sh 'git --version'
+		// 		echo "Branch: ${env.BRANCH_NAME}"
+		// 		sh 'docker -v'
+		// 		sh 'printenv|sort'
+		// 		sh 'env|sort'
+		// 	}
+		// }
 
-		stage('Build Docker test') {
-			steps {
-				sh 'docker build --tag react-test --file Dockerfile.test --no-cache .'
-			}
-		}
+		// stage('Build Docker test') {
+		// 	steps {
+		// 		sh 'docker build --tag react-test --file Dockerfile.test --no-cache .'
+		// 	}
+		// }
 
-		stage('Docker test') {
-			steps {
-				sh 'docker run --rm react-test'
-			}
-		}
+		// stage('Docker test') {
+		// 	steps {
+		// 		sh 'docker run --rm react-test'
+		// 	}
+		// }
 
-		stage('Clean Docker test') {
-			steps {
-				sh 'docker rmi react-test'
-			}
-		}
+		// stage('Clean Docker test') {
+		// 	steps {
+		// 		sh 'docker rmi react-test'
+		// 	}
+		// }
 
 		// stage('Deploy') {
 		// 	when {
@@ -428,37 +429,37 @@ pipeline {
 		// }
 	}
 
-	post {
-		always {
-			echo "Sending message to Slack"
-			// script {
-			// 	notifySlack(buildStatus: currentBuild.result, channel: "${params.SLACK_CHANNEL_2}")
-			// }
-		}
+	// post {
+	// 	always {
+	// 		echo "Sending message to Slack"
+	// 		// script {
+	// 		// 	notifySlack(buildStatus: currentBuild.result, channel: "${params.SLACK_CHANNEL_2}")
+	// 		// }
+	// 	}
 
-		// aborted {
-		// 	echo "Sending message to Slack"
-		// 	// slackSend (color: "${env.SLACK_COLOR_WARNING}",
-		// 	// 		channel: "${params.SLACK_CHANNEL_2}",
-		// 	// 		message: "*ABORTED:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${env.USER_ID}\n More info at: ${env.BUILD_URL}")
-		// }
+	// 	// aborted {
+	// 	// 	echo "Sending message to Slack"
+	// 	// 	// slackSend (color: "${env.SLACK_COLOR_WARNING}",
+	// 	// 	// 		channel: "${params.SLACK_CHANNEL_2}",
+	// 	// 	// 		message: "*ABORTED:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${env.USER_ID}\n More info at: ${env.BUILD_URL}")
+	// 	// }
 
-		// failure {
-		// 	echo "Sending message to Slack"
-		// 	// slackSend (color: "${env.SLACK_COLOR_DANGER}",
-		// 	// 		channel: "${params.SLACK_CHANNEL_2}",
-		// 	// 		message: "*FAILED:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${env.USER_ID}\n More info at: ${env.BUILD_URL}")
-		// }
+	// 	// failure {
+	// 	// 	echo "Sending message to Slack"
+	// 	// 	// slackSend (color: "${env.SLACK_COLOR_DANGER}",
+	// 	// 	// 		channel: "${params.SLACK_CHANNEL_2}",
+	// 	// 	// 		message: "*FAILED:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${env.USER_ID}\n More info at: ${env.BUILD_URL}")
+	// 	// }
 
-		// success {
-		// 	echo "Sending message to Slack"
-		// 	// slackSend (color: "${env.SLACK_COLOR_GOOD}",
-		// 	// 		channel: "${params.SLACK_CHANNEL_1}",
-		// 	// 		message: "*SUCCESS:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${env.USER_ID}\n More info at: ${env.BUILD_URL}")
-		// }
+	// 	// success {
+	// 	// 	echo "Sending message to Slack"
+	// 	// 	// slackSend (color: "${env.SLACK_COLOR_GOOD}",
+	// 	// 	// 		channel: "${params.SLACK_CHANNEL_1}",
+	// 	// 	// 		message: "*SUCCESS:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${env.USER_ID}\n More info at: ${env.BUILD_URL}")
+	// 	// }
 
-		// unstable {
+	// 	// unstable {
 
-		// }
-	}
+	// 	// }
+	// }
 }
