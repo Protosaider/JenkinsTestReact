@@ -263,7 +263,9 @@ pipeline {
 
 		stage('Checkout Git repository') {
 			steps {
-				notifySlack()
+				script {
+					notifySlack()
+				}
 				checkout scm
 			}
 		}
@@ -321,7 +323,9 @@ pipeline {
 	post {
 		always {
 			echo "Sending message to Slack"
-			notifySlack(buildStatus: currentBuild.result, channel: "${params.SLACK_CHANNEL_2}")
+			script {
+				notifySlack(buildStatus: currentBuild.result, channel: "${params.SLACK_CHANNEL_2}")
+			}
 		}
 
 		// aborted {
