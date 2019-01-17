@@ -122,7 +122,6 @@
 		// }
 		// 
 
-#!groovy
 // @Library('github.com/Protosaider/jenkins-shared-library@master') _ 
 @Library('jenkins-shared-library') _ 
 
