@@ -312,40 +312,43 @@ pipeline {
 
 					// attachments.add(attachment);
 
-					def json = new groovy.json.JsonBuilder()
-					json {
-						attachments ([ 
-							{
-								fallback '${subject}'
-								color '$(color)'
-								pretext 'Git info'
-								fields([
-									{
-										title 'Branch'
-										value '${env.BRANCH_NAME}'
-										'short' true
-									}
-									{
-										title 'Author'
-										value '${author}'
-										'short' true
-									}
-									{
-										title 'Last commit'
-										value '${lastCommitMessage}'
-										'short' true
-									}
-								])
-								footer '$(url)'
-								ts '${epoch}'
-							}
+					// def json = new groovy.json.JsonBuilder()
+					// json {
+					// 	attachments ([ 
+					// 		{
+					// 			fallback '${subject}'
+					// 			color '$(color)'
+					// 			pretext 'Git info'
+					// 			fields([
+					// 				{
+					// 					title 'Branch'
+					// 					value '${env.BRANCH_NAME}'
+					// 					'short' true
+					// 				}
+					// 				{
+					// 					title 'Author'
+					// 					value '${author}'
+					// 					'short' true
+					// 				}
+					// 				{
+					// 					title 'Last commit'
+					// 					value '${lastCommitMessage}'
+					// 					'short' true
+					// 				}
+					// 			])
+					// 			footer '$(url)'
+					// 			ts '${epoch}'
+					// 		}
 					 
-						])
-					}
-					println json.toPrettyString()
+					// 	])
+					// }
+					// println json.toPrettyString()
+					
+					def json = """[ { \"fallback\": \"${subject}\" } ]"""
 
 					// slackSend(color: color, message: msg, channel: channel, attachments: attachments.toString())
-					slackSend(color: color, message: msg, channel: channel, attachments: json.toPrettyString())
+					// slackSend(color: color, message: msg, channel: channel, attachments: json.toPrettyString())
+					slackSend(color: color, message: msg, channel: channel, attachments: json)
 				}
 			}
 		}
