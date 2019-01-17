@@ -63,50 +63,155 @@
 //     }
 // }
 
-node('ephemeral-slave') {
-    // environment {
-    //     CI = 'true' 
-    // }
-    withEnv(['CI=true']) { //CI - or use RUN CI=true npm test
-    	try {
-			stage('Checkout') {
+		// // #!groovy
+		// // @Library('github.com/Protosaider/jenkins-shared-lib@master') _ 
+
+		// node('ephemeral-slave') {
+		//     // environment {
+		//     //     CI = 'true' 
+		//     // }
+		//     withEnv(['CI=true']) { //CI - or use RUN CI=true npm test
+		//     	try {
+
+		//     		// stage('Start') {
+		//     		// 	notifySlack()
+		//     		// }
+
+		// 			stage('Checkout') {
+		// 				checkout scm
+		// 			}
+
+		// 			stage('Environment') {
+		// 				sh 'git --version'
+		// 				echo "Branch: ${env.BRANCH_NAME}"
+		// 				sh 'docker -v'
+		// 				sh 'printenv'
+		// 			}
+
+		// 			stage('Build Docker test') {
+		// 				sh 'docker build --tag react-test --file Dockerfile.test --no-cache .'
+		// 			}
+
+		// 			stage('Docker test') {
+		// 				sh 'docker run --rm react-test'
+		// 			}
+
+		// 			stage('Clean Docker test') {
+		// 				sh 'docker rmi react-test'
+		// 			}
+
+		// 			stage('Deploy') {
+		// 				if(env.BRANCH_NAME == 'master') {
+		// 					sh 'docker build -t react-app --no-cache .'
+
+		// 					sh 'docker tag react-app localhost:5000/react-app'
+		// 					sh 'docker push localhost:5000/react-app'
+		// 					sh 'docker rmi -f react-app localhost:5000/react-app'
+
+		// 					// sh 'docker tag react-app http://192.168.99.100:5000/react-app'
+		// 					// sh 'docker push http://192.168.99.100:5000/react-app'
+		// 					// sh 'docker rmi -f react-app http://192.168.99.100:5000/react-app'
+		// 				}
+		// 			}
+		// 	  	} catch (err) {
+		// 	  		// currentBuild.result = 'FAILURE'
+		// 	  		throw err
+		// 	  	}
+		// 		// } finally {
+		// 		// 	notifySlack(currentBuild.result)
+		// 		// }
+		//     }
+		// }
+		// 
+
+pipeline {
+	agent {
+		node {
+			label 'ephemeral-slave'
+		}
+	}
+
+	options {
+		skipDefaultCheckout()
+	// 	disableConcurrentBuilds()
+	// 	timeout(time: 10, unit: 'MINUTES')
+	// 	buildDiscarder(logRotator(numToKeepStr: '10'))
+	// 	timestamps()
+	}
+
+	// parameters {
+
+	// 	string(name: 'SLACK_CHANNEL_1',
+	// 			description: 'Default Slack channel to send messages to',
+	// 			defaultValue: '#my_channel_1')
+
+	// 	string(name: 'SLACK_CHANNEL_2',
+	// 			description: 'Default Slack channel to send messages to',
+	// 			defaultValue: '#my_channel_2')           
+	// }
+
+	environment {
+		// // Slack configuration
+		// SLACK_COLOR_DANGER  = '#E01563'
+		// SLACK_COLOR_INFO    = '#6ECADC'
+		// SLACK_COLOR_WARNING = '#FFC300'
+		// SLACK_COLOR_GOOD    = '#3EB991'
+		CI = true
+	}
+
+	stages {
+
+		stage('Checkout Git repository') {
+			steps {
 				checkout scm
 			}
+		}
 
-			stage('Environment') {
+		stage('Environment') {
+			steps {
 				sh 'git --version'
 				echo "Branch: ${env.BRANCH_NAME}"
 				sh 'docker -v'
 				sh 'printenv'
 			}
+		}
 
-			stage('Build Docker test') {
+		stage('Build Docker test') {
+			steps {
 				sh 'docker build --tag react-test --file Dockerfile.test --no-cache .'
 			}
+		}
 
-			stage('Docker test') {
+		stage('Docker test') {
+			steps {
 				sh 'docker run --rm react-test'
 			}
+		}
 
-			stage('Clean Docker test') {
+		stage('Clean Docker test') {
+			steps {
 				sh 'docker rmi react-test'
 			}
-
-			stage('Deploy') {
-				if(env.BRANCH_NAME == 'master') {
-					sh 'docker build -t react-app --no-cache .'
-
-					sh 'docker tag react-app localhost:5000/react-app'
-					sh 'docker push localhost:5000/react-app'
-					sh 'docker rmi -f react-app localhost:5000/react-app'
-
-					// sh 'docker tag react-app http://192.168.99.100:5000/react-app'
-					// sh 'docker push http://192.168.99.100:5000/react-app'
-					// sh 'docker rmi -f react-app http://192.168.99.100:5000/react-app'
-				}
-			}
-	  	} catch (err) {
-	  		throw err
 		}
-    }
+
+		// stage('Deploy') {
+		// 	when {
+		// 		branch 'master'
+		// 	}
+
+		// 	steps {
+		// 		sh 'docker build -t react-app --no-cache .'
+
+		// 		sh 'docker tag react-app localhost:5000/react-app'
+		// 		sh 'docker push localhost:5000/react-app'
+		// 		sh 'docker rmi -f react-app localhost:5000/react-app'
+		// 	}
+		// }
+	}
+
+	post {
+		always {
+			// cleanWs()
+		}
+	}
 }
