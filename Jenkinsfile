@@ -123,7 +123,7 @@
 		// 
 
 // @Library('github.com/Protosaider/jenkins-shared-library@master') _ 
-// @Library('jenkins-shared-library') _ 
+@Library('jenkins-shared-library') _ 
 
 pipeline {
 	agent {
@@ -162,10 +162,10 @@ pipeline {
 
 	stages {
 
+		// library 'jenkins-shared-library'
+
 		stage('Checkout Git repository') {
 			steps {
-		library 'jenkins-shared-library'
-				
 				// notifySlack()
 				checkout scm
 			}
