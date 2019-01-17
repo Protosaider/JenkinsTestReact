@@ -277,36 +277,37 @@ pipeline {
   					String buildStatus = 'STARTED'
   					def color = '#D4DADF'
   					// def subject = "${buildStatus}: Job ${env.JOB_NAME} build #${env.BUILD_NUMBER} by ${env.USER_ID}"
-  					def subject = "${buildStatus}: Job ${env.JOB_NAME} build #${env.BUILD_NUMBER}"
+  					def subject = "*${buildStatus}*\nJob _${env.JOB_NAME}_, build _#${env.BUILD_NUMBER}_"
   					def msg = "${subject}\n More info at: ${env.BUILD_URL}"
 
 
-					JSONArray attachments = new JSONArray();
-					JSONObject attachment = new JSONObject();
-					attachment.put('fallback', subject);
-					attachment.put('title', 'Git info');
-					attachment.put('color', color);
-					JSONObject fieldBranch = new JSONObject();
-					fieldBranch.put('title', 'Branch');
-					fieldBranch.put('value', env.BRANCH_NAME);
-					fieldBranch.put('short', 'true');
-					JSONObject fieldGitAuthor = new JSONObject();
-					fieldGitAuthor.put('title', 'Author');
-					fieldGitAuthor.put('value', author);
-					fieldGitAuthor.put('short', 'true');
-					JSONObject fieldLastCommitMessage = new JSONObject();
-					fieldLastCommitMessage.put('title', 'Last commit');
-					fieldLastCommitMessage.put('value', lastCommitMessage);
-					fieldLastCommitMessage.put('short', 'true');
-					JSONArray fields = new JSONObject();
-					fields.add(fieldBranch);
-					fields.add(fieldGitAuthor);
-					fields.add(fieldLastCommitMessage);
-					attachment.put('fields', fields);
-					attachment.put('footer', url);
-					attachment.put('ts', epoch);
-					attachments.add(attachment);
-					slackSend(color: color, message: msg, channel: "${params.SLACK_CHANNEL_2}", attachments: attachments.toString())
+					// JSONArray attachments = new JSONArray();
+					// JSONObject attachment = new JSONObject();
+					// attachment.put('fallback', subject);
+					// attachment.put('title', 'Git info');
+					// attachment.put('color', color);
+					// JSONObject fieldBranch = new JSONObject();
+					// fieldBranch.put('title', 'Branch');
+					// fieldBranch.put('value', env.BRANCH_NAME);
+					// fieldBranch.put('short', 'true');
+					// JSONObject fieldGitAuthor = new JSONObject();
+					// fieldGitAuthor.put('title', 'Author');
+					// fieldGitAuthor.put('value', author);
+					// fieldGitAuthor.put('short', 'true');
+					// JSONObject fieldLastCommitMessage = new JSONObject();
+					// fieldLastCommitMessage.put('title', 'Last commit');
+					// fieldLastCommitMessage.put('value', lastCommitMessage);
+					// fieldLastCommitMessage.put('short', 'true');
+					// JSONArray fields = new JSONObject();
+					// fields.add(fieldBranch);
+					// fields.add(fieldGitAuthor);
+					// fields.add(fieldLastCommitMessage);
+					// attachment.put('fields', fields);
+					// attachment.put('footer', url);
+					// attachment.put('ts', epoch);
+					// attachments.add(attachment);
+					// slackSend(color: color, message: msg, channel: "${params.SLACK_CHANNEL_2}", attachments: attachments.toString())
+					slackSend(color: color, message: msg, channel: "${params.SLACK_CHANNEL_2}")
 
 
 					// def json = new groovy.json.JsonBuilder()
@@ -465,14 +466,14 @@ pipeline {
 				}
 
 
-				def subject = "*${buildStatus}* ${iconEmoji}\nJob _${env.JOB_NAME}_, build _#${env.BUILD_NUMBER}_"
+				def subject = "*STATUS: _${buildStatus}_* ${iconEmoji}\nJob _${env.JOB_NAME}_, build _#${env.BUILD_NUMBER}_"
 				def msg = "${subject}\n More info at: ${env.BUILD_URL}"
 
 
 				JSONArray attachments = new JSONArray();
 				JSONObject attachment = new JSONObject();
 				attachment.put('fallback', subject);
-				attachment.put('title', 'Git info :git:');
+				attachment.put('title', ':github: Github info');
 				attachment.put('color', color);
 				JSONObject fieldBranch = new JSONObject();
 				fieldBranch.put('title', 'Branch');
@@ -492,7 +493,7 @@ pipeline {
 				fields.add(fieldLastCommitMessage);
 				attachment.put('fields', fields);
 				attachment.put('footer', url);
-				attachment.put('footer_icon', ':github:');
+				attachment.put('footer_icon', 'https://emojis.slackmojis.com/emojis/images/1501021339/341/git.png?1501021339');
 				attachment.put('ts', epoch);
 				attachments.add(attachment);
 				slackSend(color: color, message: msg, channel: "${params.SLACK_CHANNEL_2}", attachments: attachments.toString())
