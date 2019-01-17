@@ -162,10 +162,10 @@ pipeline {
 
 	stages {
 
-		library 'jenkins-shared-library'
-
 		stage('Checkout Git repository') {
 			steps {
+		library 'jenkins-shared-library'
+				
 				// notifySlack()
 				checkout scm
 			}
