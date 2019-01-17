@@ -269,8 +269,9 @@ pipeline {
 				script {
 					def url = sh(returnStdout: true, script: "git remote get-url origin").trim()
 					def commit = sh(returnStdout: true, script: 'git rev-parse HEAD')
-    				def authorS = sh(returnStdout: true, script: "git --no-pager show -s --format='%an' ${commit}").trim()
-    				def author = authorS.replace("\\", "\\\\")
+    				def author = sh(returnStdout: true, script: "git --no-pager show -s --format='%an' ${commit}").trim()
+    				// def authorS = sh(returnStdout: true, script: "git --no-pager show -s --format='%an' ${commit}").trim()
+    				// def author = authorS.replace("\\", "\\\\")
    	 				def lastCommitMessage = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim()
   					long epoch = System.currentTimeMillis()/1000
   					String buildStatus = 'STARTED'
