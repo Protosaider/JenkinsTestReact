@@ -366,9 +366,9 @@ pipeline {
 	post {
 		always {
 			echo "Sending message to Slack"
-			script {
-				notifySlack(buildStatus: currentBuild.result, channel: "${params.SLACK_CHANNEL_2}")
-			}
+			// script {
+			// 	notifySlack(buildStatus: currentBuild.result, channel: "${params.SLACK_CHANNEL_2}")
+			// }
 		}
 
 		// aborted {
