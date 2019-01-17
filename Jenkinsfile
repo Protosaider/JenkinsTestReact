@@ -173,6 +173,8 @@ pipeline {
 				echo "Branch: ${env.BRANCH_NAME}"
 				sh 'docker -v'
 				sh 'printenv'
+				sh 'env|sort'
+				// echo sh(returnStdout: true, script: 'env|sort')
 			}
 		}
 
@@ -209,9 +211,9 @@ pipeline {
 		// }
 	}
 
-	post {
-		always {
-			// cleanWs()
-		}
-	}
+	// post {
+	// 	always {
+	// 		cleanWs()
+	// 	}
+	// }
 }
