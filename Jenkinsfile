@@ -263,6 +263,7 @@ pipeline {
 
 		stage('Checkout Git repository') {
 			steps {
+				checkout scm
 				// wrap([$class: 'BuildUser']) { script { env.USER_ID = "${BUILD_USER_ID}" } }
 				script {
 					def url = sh(returnStdout: true, script: "git remote get-url origin").trim()
@@ -310,7 +311,6 @@ pipeline {
 
 					slackSend(color: color, message: msg, channel: channel, attachments: attachments.toString())
 				}
-				checkout scm
 			}
 		}
 
