@@ -125,8 +125,6 @@
 // @Library('github.com/Protosaider/jenkins-shared-library@master') _ 
 // @Library('jenkins-shared-library') _ 
 
-library 'jenkins-shared-library'
-
 pipeline {
 	agent {
 		node {
@@ -163,6 +161,8 @@ pipeline {
 	}
 
 	stages {
+
+		library 'jenkins-shared-library'
 
 		stage('Checkout Git repository') {
 			steps {
