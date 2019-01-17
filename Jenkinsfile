@@ -346,13 +346,13 @@ pipeline {
 					def json = """{
 						"attachments": [ 
 							{
-								"fallback": """ + ${subject} + """,
-								"color": """ + ${color} + """,
+								"fallback": """ + subject + """,
+								"color": """ + color + """,
 								"pretext": "Git info",
 								"fields": [
 									{
 										"title": "Branch",
-										"value": """ + ${env.BRANCH_NAME} + """,
+										"value": """ + env.BRANCH_NAME + """,
 										"short": true
 									},
 									{
@@ -362,12 +362,12 @@ pipeline {
 									},
 									{
 										"title": "Last commit",
-										"value": """ + ${lastCommitMessage} + """,
+										"value": """ + lastCommitMessage + """,
 										"short": true
 									}
 								],
-								"footer": """ + ${url} + """,
-								"ts": """ + ${epoch} + """
+								"footer": """ + url + """,
+								"ts": """ + epoch + """
 							}					 
 						]
 					}"""
