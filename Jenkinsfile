@@ -465,7 +465,7 @@ pipeline {
 				}
 
 
-				def subject = "*${buildStatus}*${iconEmoji}\nJob _${env.JOB_NAME}_, build _#${env.BUILD_NUMBER}_"
+				def subject = "*${buildStatus}* ${iconEmoji}\nJob _${env.JOB_NAME}_, build _#${env.BUILD_NUMBER}_"
 				def msg = "${subject}\n More info at: ${env.BUILD_URL}"
 
 
