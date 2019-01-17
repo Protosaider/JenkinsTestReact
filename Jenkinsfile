@@ -265,7 +265,7 @@ pipeline {
 			steps {
 				checkout scm
 				// wrap([$class: 'BuildUser']) { script { env.USER_ID = "${BUILD_USER_ID}" } }
-				@NonCPS
+
 				script {
 					def url = sh(returnStdout: true, script: "git remote get-url origin").trim()
 					def commit = sh(returnStdout: true, script: 'git rev-parse HEAD')
@@ -278,39 +278,74 @@ pipeline {
   					def subject = "${buildStatus}: Job ${env.JOB_NAME} build #${env.BUILD_NUMBER}"
   					def msg = "${subject}\n More info at: ${env.BUILD_URL}"
 
-					JSONArray attachments = new JSONArray();
-					JSONObject attachment = new JSONObject();
+					// JSONArray attachments = new JSONArray();
+					// JSONObject attachment = new JSONObject();
 
-					attachment.put('fallback', '${subject}');
-					attachment.put('pretext', 'Git info');
-					attachment.put('color', '$(color)');
-					attachment.put('footer', '$(url)');
+					// attachment.put('fallback', '${subject}');
+					// attachment.put('pretext', 'Git info');
+					// attachment.put('color', '$(color)');
 
-					JSONObject fieldBranch = new JSONObject();
-					fieldBranch.put('title', 'Branch');
-					fieldBranch.put('value', '${env.BRANCH_NAME}');
-					fieldBranch.put('short', 'true');
+					// JSONObject fieldBranch = new JSONObject();
+					// fieldBranch.put('title', 'Branch');
+					// fieldBranch.put('value', '${env.BRANCH_NAME}');
+					// fieldBranch.put('short', 'true');
 
-					JSONObject fieldGitAuthor = new JSONObject();
-					fieldGitAuthor.put('title', 'Author');
-					fieldGitAuthor.put('value', '${author}');
-					fieldGitAuthor.put('short', 'true');
+					// JSONObject fieldGitAuthor = new JSONObject();
+					// fieldGitAuthor.put('title', 'Author');
+					// fieldGitAuthor.put('value', '${author}');
+					// fieldGitAuthor.put('short', 'true');
 
-					JSONObject fieldLastCommitMessage = new JSONObject();
-					fieldLastCommitMessage.put('title', 'Last commit');
-					fieldLastCommitMessage.put('value', '${lastCommitMessage}');
-					fieldLastCommitMessage.put('short', 'true');
+					// JSONObject fieldLastCommitMessage = new JSONObject();
+					// fieldLastCommitMessage.put('title', 'Last commit');
+					// fieldLastCommitMessage.put('value', '${lastCommitMessage}');
+					// fieldLastCommitMessage.put('short', 'true');
 
-					JSONArray fields = new JSONObject();
-					fields.add(fieldBranch);
-					fields.add(fieldGitAuthor);
-					fields.add(fieldLastCommitMessage);
+					// JSONArray fields = new JSONObject();
+					// fields.add(fieldBranch);
+					// fields.add(fieldGitAuthor);
+					// fields.add(fieldLastCommitMessage);
 
-					attachment.put('fields', fields);
+					// attachment.put('fields', fields);
 
-					attachments.add(attachment);
+					// attachment.put('footer', '$(url)');
+					// attachment.put('ts', '$(epoch)');
 
-					slackSend(color: color, message: msg, channel: channel, attachments: attachments.toString())
+					// attachments.add(attachment);
+
+					def json = new groovy.json.JsonBuilder()
+					json {
+						attachments ([ 
+							{
+								fallback '${subject}'
+								color '$(color)'
+								pretext 'Git info'
+								fields([
+									{
+										title 'Branch'
+										value '${env.BRANCH_NAME}'
+										'short' true
+									}
+									{
+										title 'Author'
+										value '${author}'
+										'short' true
+									}
+									{
+										title 'Last commit'
+										value '${lastCommitMessage}'
+										'short' true
+									}
+								])
+								footer '$(url)'
+								ts '${epoch}'
+							}
+					 
+						])
+					}
+					println json.toPrettyString()
+
+					// slackSend(color: color, message: msg, channel: channel, attachments: attachments.toString())
+					slackSend(color: color, message: msg, channel: channel, attachments: json.toPrettyString())
 				}
 			}
 		}
