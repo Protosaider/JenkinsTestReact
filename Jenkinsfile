@@ -284,7 +284,7 @@ pipeline {
 					JSONArray attachments = new JSONArray();
 					JSONObject attachment = new JSONObject();
 					attachment.put('fallback', subject);
-					attachment.put('pretext', 'Git info');
+					attachment.put('title', 'Git info');
 					attachment.put('color', color);
 					JSONObject fieldBranch = new JSONObject();
 					fieldBranch.put('title', 'Branch');
@@ -426,39 +426,103 @@ pipeline {
 		// }
 	}
 
-	// post {
-	// 	always {
-	// 		echo "Sending message to Slack"
-	// 		// script {
-	// 		// 	notifySlack(buildStatus: currentBuild.result, channel: "${params.SLACK_CHANNEL_2}")
-	// 		// }
-	// 	}
+	post {
+		always {
+			echo "Sending message to Slack"
+			script {
+				def url = sh(returnStdout: true, script: "git remote get-url origin").trim()
+				def commit = sh(returnStdout: true, script: 'git rev-parse HEAD')
+				def author = sh(returnStdout: true, script: "git --no-pager show -s --format='%an' ${commit}").trim()
+ 				def lastCommitMessage = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim()
+				long epoch = System.currentTimeMillis()/1000
 
-	// 	// aborted {
-	// 	// 	echo "Sending message to Slack"
-	// 	// 	// slackSend (color: "${env.SLACK_COLOR_WARNING}",
-	// 	// 	// 		channel: "${params.SLACK_CHANNEL_2}",
-	// 	// 	// 		message: "*ABORTED:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${env.USER_ID}\n More info at: ${env.BUILD_URL}")
-	// 	// }
+				String buildStatus = currentBuild.result
+				buildStatus = buildStatus ?: 'SUCCESS'
 
-	// 	// failure {
-	// 	// 	echo "Sending message to Slack"
-	// 	// 	// slackSend (color: "${env.SLACK_COLOR_DANGER}",
-	// 	// 	// 		channel: "${params.SLACK_CHANNEL_2}",
-	// 	// 	// 		message: "*FAILED:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${env.USER_ID}\n More info at: ${env.BUILD_URL}")
-	// 	// }
+				def color
+				if (buildStatus == 'STARTED') {
+				  color = '#D4DADF'
+				} else if (buildStatus == 'SUCCESS') {
+				  color = '#BDFFC3'
+				  // color = 'good'
+				} else if (buildStatus == 'UNSTABLE') {
+				  color = '#FFFE89'
+				} else if (status == 'ABORTED') {
+				  color = '#FFFE89'
+				} else if (status == 'NOT_BUILT') {
+				  color = '#FFFE89'
+				  // color = 'warning'
+				}
+				else if (buildResult == 'FAILURE') {
+				  color = '#FFFE89'
+				  // color = 'danger'
+				} 
+				else {
+				  color = '#FF9FA1'
+				}
 
-	// 	// success {
-	// 	// 	echo "Sending message to Slack"
-	// 	// 	// slackSend (color: "${env.SLACK_COLOR_GOOD}",
-	// 	// 	// 		channel: "${params.SLACK_CHANNEL_1}",
-	// 	// 	// 		message: "*SUCCESS:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${env.USER_ID}\n More info at: ${env.BUILD_URL}")
-	// 	// }
 
-	// 	// unstable {
+				def subject = "${buildStatus}: Job ${env.JOB_NAME} build #${env.BUILD_NUMBER}"
+				def msg = "${subject}\n More info at: ${env.BUILD_URL}"
 
-	// 	// }
-	// }
+
+				JSONArray attachments = new JSONArray();
+				JSONObject attachment = new JSONObject();
+				attachment.put('fallback', subject);
+				attachment.put('title', 'Git info');
+				attachment.put('color', color);
+				JSONObject fieldBranch = new JSONObject();
+				fieldBranch.put('title', 'Branch');
+				fieldBranch.put('value', env.BRANCH_NAME);
+				fieldBranch.put('short', 'true');
+				JSONObject fieldGitAuthor = new JSONObject();
+				fieldGitAuthor.put('title', 'Author');
+				fieldGitAuthor.put('value', author);
+				fieldGitAuthor.put('short', 'true');
+				JSONObject fieldLastCommitMessage = new JSONObject();
+				fieldLastCommitMessage.put('title', 'Last commit');
+				fieldLastCommitMessage.put('value', lastCommitMessage);
+				fieldLastCommitMessage.put('short', 'true');
+				JSONArray fields = new JSONObject();
+				fields.add(fieldBranch);
+				fields.add(fieldGitAuthor);
+				fields.add(fieldLastCommitMessage);
+				attachment.put('fields', fields);
+				attachment.put('footer', url);
+				attachment.put('ts', epoch);
+				attachments.add(attachment);
+				slackSend(color: color, message: msg, channel: "${params.SLACK_CHANNEL_2}", attachments: attachments.toString())
+			}
+			// script {
+			// 	notifySlack(buildStatus: currentBuild.result, channel: "${params.SLACK_CHANNEL_2}")
+			// }
+		}
+
+		// aborted {
+		// 	echo "Sending message to Slack"
+		// 	// slackSend (color: "${env.SLACK_COLOR_WARNING}",
+		// 	// 		channel: "${params.SLACK_CHANNEL_2}",
+		// 	// 		message: "*ABORTED:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${env.USER_ID}\n More info at: ${env.BUILD_URL}")
+		// }
+
+		// failure {
+		// 	echo "Sending message to Slack"
+		// 	// slackSend (color: "${env.SLACK_COLOR_DANGER}",
+		// 	// 		channel: "${params.SLACK_CHANNEL_2}",
+		// 	// 		message: "*FAILED:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${env.USER_ID}\n More info at: ${env.BUILD_URL}")
+		// }
+
+		// success {
+		// 	echo "Sending message to Slack"
+		// 	// slackSend (color: "${env.SLACK_COLOR_GOOD}",
+		// 	// 		channel: "${params.SLACK_CHANNEL_1}",
+		// 	// 		message: "*SUCCESS:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${env.USER_ID}\n More info at: ${env.BUILD_URL}")
+		// }
+
+		// unstable {
+
+		// }
+	}
 }
 
 // {
