@@ -270,6 +270,7 @@ pipeline {
 					def url = sh(returnStdout: true, script: "git remote get-url origin").trim()
 					def commit = sh(returnStdout: true, script: 'git rev-parse HEAD')
     				def author = sh(returnStdout: true, script: "git --no-pager show -s --format='%an' ${commit}").trim()
+    				author = author.toString().replaceAll("\\", "\\\\")
    	 				def lastCommitMessage = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim()
   					long epoch = System.currentTimeMillis()/1000
   					String buildStatus = 'STARTED'
@@ -464,3 +465,32 @@ pipeline {
 	// 	// }
 	// }
 }
+
+// {
+// 						"attachments": [ 
+// 							{
+// 								"fallback": "STARTED: Job test2/master build #53",
+// 								"color": "#D4DADF",
+// 								"pretext": "Git info",
+// 								"fields": [
+// 									{
+// 										"title": "Branch",
+// 										"value": "master",
+// 										"short": true
+// 									},
+// 									{
+// 										"title": "Author",
+// 										"value": "WorkingHandGuard\Protosaider",
+// 										"short": true
+// 									},
+// 									{
+// 										"title": "Last commit",
+// 										"value": "Jenkinsfile fix 21",
+// 										"short": true
+// 									}
+// 								],
+// 								"footer": "https://github.com/Protosaider/JenkinsTestReact.git",
+// 								"ts": 1547759617
+// 							}					 
+// 						]
+// 					}
