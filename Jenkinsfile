@@ -373,7 +373,7 @@ pipeline {
 					}"""
 					// slackSend(color: color, message: msg, channel: channel, attachments: attachments.toString())
 					// slackSend(color: color, message: msg, channel: channel, attachments: json.toPrettyString())
-					slackSend(color: color, message: msg, channel: channel, attachments: json)
+					slackSend(color: color, message: msg, channel: "${params.SLACK_CHANNEL_2}", attachments: json)
 				}
 			}
 		}
