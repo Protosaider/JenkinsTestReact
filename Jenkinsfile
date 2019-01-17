@@ -357,7 +357,7 @@ pipeline {
 									},
 									{
 										"title": "Author",
-										"value": """ + ${author} + """,
+										"value": """ + author + """,
 										"short": true
 									},
 									{
@@ -371,6 +371,7 @@ pipeline {
 							}					 
 						]
 					}"""
+
 					echo "${json}"
 					// slackSend(color: color, message: msg, channel: channel, attachments: attachments.toString())
 					// slackSend(color: color, message: msg, channel: channel, attachments: json.toPrettyString())
