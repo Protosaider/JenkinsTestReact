@@ -344,7 +344,7 @@ pipeline {
 					// }
 					// println json.toPrettyString()
 					
-					def json = """[ { \"fallback\": \"${subject}\" } ]"""
+					def json = """[ { \"fallback\": \"subject\" } ]"""
 
 					// slackSend(color: color, message: msg, channel: channel, attachments: attachments.toString())
 					// slackSend(color: color, message: msg, channel: channel, attachments: json.toPrettyString())
