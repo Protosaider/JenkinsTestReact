@@ -439,7 +439,7 @@ pipeline {
 				String buildStatus = currentBuild.result
 				buildStatus = buildStatus ?: 'SUCCESS'
 
-				def iconEmoji = ':jenkins:'
+				def iconEmoji = ':jenkins_ci:'
 
 				def color
 				if (buildStatus == 'STARTED' || buildStatus == 'ABORTED') {
@@ -457,11 +457,11 @@ pipeline {
 				  // color = '#FFFE89'
 				  // color = '#FF9FA1'
 				  color = 'danger'
-				  iconEmoji = ':badjenkins:'
+				  iconEmoji = ':jenkins_devil:'
 				} 
 				else {
 				  color = '#FF9FA1'
-				  iconEmoji = ':badjenkins:'
+				  iconEmoji = ':jenkins_devil:'
 				}
 
 
@@ -472,7 +472,7 @@ pipeline {
 				JSONArray attachments = new JSONArray();
 				JSONObject attachment = new JSONObject();
 				attachment.put('fallback', subject);
-				attachment.put('title', 'Git info');
+				attachment.put('title', 'Git info :git:');
 				attachment.put('color', color);
 				JSONObject fieldBranch = new JSONObject();
 				fieldBranch.put('title', 'Branch');
@@ -492,6 +492,7 @@ pipeline {
 				fields.add(fieldLastCommitMessage);
 				attachment.put('fields', fields);
 				attachment.put('footer', url);
+				attachment.put('footer_icon', ':github:');
 				attachment.put('ts', epoch);
 				attachments.add(attachment);
 				slackSend(color: color, message: msg, channel: "${params.SLACK_CHANNEL_2}", attachments: attachments.toString())
