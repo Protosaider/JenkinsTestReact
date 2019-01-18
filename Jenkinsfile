@@ -377,46 +377,46 @@ pipeline {
 			}
 		}
 
-		// stage('Environment') {
-		// 	steps {
-		// 		sh 'git --version'
-		// 		echo "Branch: ${env.BRANCH_NAME}"
-		// 		sh 'docker -v'
-		// 		sh 'printenv|sort'
-		// 	}
-		// }
+		stage('Environment') {
+			steps {
+				sh 'git --version'
+				echo "Branch: ${env.BRANCH_NAME}"
+				sh 'docker -v'
+				sh 'printenv|sort'
+			}
+		}
 
-		// stage('Build Docker test') {
-		// 	steps {
-		// 		sh 'docker build --tag react-test --file Dockerfile.test --no-cache .'
-		// 	}
-		// }
+		stage('Build Docker test') {
+			steps {
+				sh 'docker build --tag react-test --file Dockerfile.test --no-cache .'
+			}
+		}
 
-		// stage('Docker test') {
-		// 	steps {
-		// 		sh 'docker run --rm react-test'
-		// 	}
-		// }
+		stage('Docker test') {
+			steps {
+				sh 'docker run --rm react-test'
+			}
+		}
 
-		// stage('Clean Docker test') {
-		// 	steps {
-		// 		sh 'docker rmi react-test'
-		// 	}
-		// }
+		stage('Clean Docker test') {
+			steps {
+				sh 'docker rmi react-test'
+			}
+		}
 
-		// stage('Deploy') {
-		// 	when {
-		// 		branch 'master'
-		// 	}
+		stage('Deploy') {
+			when {
+				branch 'master'
+			}
 
-		// 	steps {
-		// 		sh 'docker build -t react-app --no-cache .'
+			steps {
+				sh 'docker build -t react-app --no-cache .'
 
-		// 		sh 'docker tag react-app localhost:5000/react-app'
-		// 		sh 'docker push localhost:5000/react-app'
-		// 		sh 'docker rmi -f react-app localhost:5000/react-app'
-		// 	}
-		// }
+				sh 'docker tag react-app localhost:5000/react-app'
+				sh 'docker push localhost:5000/react-app'
+				sh 'docker rmi -f react-app localhost:5000/react-app'
+			}
+		}
 		
 		// stage("Clean Workspace") {
 		// 	steps {
